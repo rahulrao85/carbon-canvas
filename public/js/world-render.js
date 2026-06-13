@@ -142,8 +142,10 @@ function drawLightning(mood) {
  * Renders the full garden scene based on carbon level.
  * Redraws sky, sun, clouds, ground, and mood elements.
  * @param {number} kgCO2 - Current total CO2 in kg.
+ * @param {number} [streak=0] - Current streak for bonus decorations.
  */
-export function renderGarden(kgCO2) {
+export function renderGarden(kgCO2, streak = 0) {
+  if (!canvas || !ctx) return;
   const mood = getMood(kgCO2);
   canvas.width = (canvas.clientWidth || canvas.width) * 2;
   canvas.height = (canvas.clientHeight || canvas.height) * 2;
@@ -160,4 +162,52 @@ export function renderGarden(kgCO2) {
   drawBirds(mood);
   drawTrash(mood);
   drawLightning(mood);
+  drawStreakRewards(mood, streak);
+}
+
+function drawStreakRewards(mood, streak) {
+  if (mood === 'high') return;
+  if (streak >= 7) {
+    drawButterflies(4);
+    drawSpecialFlowers();
+  } else if (streak >= 5) {
+    drawButterflies(2);
+  } else if (streak >= 3) {
+    drawButterflies(1);
+  }
+}
+
+function drawButterflies(count) {
+  const positions = [
+    { x: 100, y: 100 }, { x: 350, y: 80 },
+    { x: 600, y: 110 }, { x: 200, y: 130 },
+  ];
+  for (let i = 0; i < count && i < positions.length; i++) {
+    const p = positions[i];
+    ctx.fillStyle = '#e91e63';
+    ctx.beginPath();
+    ctx.ellipse(p.x - 6, p.y, 5, 3, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(p.x + 6, p.y, 5, 3, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawSpecialFlowers() {
+  const by = canvas.height * 0.72;
+  for (let i = 0; i < 5; i++) {
+    const x = 80 + i * (canvas.width / 5);
+    const y = by + Math.sin(i * 2) * 10;
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffd700';
+    ctx.fill();
+    ctx.strokeStyle = '#4caf50';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y + 5);
+    ctx.lineTo(x, y + 18);
+    ctx.stroke();
+  }
 }

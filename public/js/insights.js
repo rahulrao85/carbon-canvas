@@ -11,6 +11,7 @@ if (typeof document !== 'undefined') {
 
 /** Sets the insight container to show a result. @param {string} text */
 function setInsightText(text) {
+  if (!insightContent) return;
   insightContent.textContent = '';
   const p = document.createElement('p');
   p.textContent = text;
@@ -19,6 +20,7 @@ function setInsightText(text) {
 
 /** Sets the insight container to show a placeholder. @param {string} text */
 function setInsightPlaceholder(text) {
+  if (!insightContent) return;
   insightContent.textContent = '';
   const p = document.createElement('p');
   p.className = 'insight-placeholder';

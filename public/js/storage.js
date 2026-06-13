@@ -157,3 +157,57 @@ export function getTheme() {
 export function setTheme(theme) {
   localStorage.setItem(STORAGE_KEYS.theme, theme);
 }
+
+export function getOnboardingDone() {
+  return localStorage.getItem('cc_onboarding') === '1';
+}
+
+export function setOnboardingDone() {
+  localStorage.setItem('cc_onboarding', '1');
+}
+
+export function getWeeklySnapshots() {
+  try {
+    return JSON.parse(localStorage.getItem('cc_snapshots')) || [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveWeeklySnapshot(co2) {
+  const snapshots = getWeeklySnapshots();
+  const day = new Date().getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const monday = new Date();
+  monday.setDate(monday.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  const weekStart = monday.getTime();
+  const entry = { weekStart, co2 };
+  const idx = snapshots.findIndex(s => s.weekStart === weekStart);
+  if (idx >= 0) snapshots[idx] = entry;
+  else snapshots.push(entry);
+  snapshots.sort((a, b) => b.weekStart - a.weekStart);
+  localStorage.setItem('cc_snapshots', JSON.stringify(snapshots.slice(0, 8)));
+  return snapshots;
+}
+
+export function getCategoryCounts() {
+  const week = getWeekActivities();
+  const counts = {};
+  week.forEach(a => { counts[a.category] = (counts[a.category] || 0) + 1; });
+  return counts;
+}
+
+export function getNudge() {
+  const counts = getCategoryCounts();
+  const entries = Object.entries(counts).filter(([, c]) => c >= 3);
+  if (entries.length === 0) return null;
+  const [cat] = entries.sort((a, b) => b[1] - a[1])[0];
+  const tips = {
+    transport: 'Try taking the metro or bus instead of driving. Switching could save up to 80% emissions on your commute.',
+    food: 'Consider adding more plant-based meals to your week. A single vegetarian day saves ~8 kg CO₂.',
+    energy: 'Unplug devices when not in use and switch to LED bulbs. Reducing AC by 1°C saves ~10% energy.',
+    shopping: 'Try the 24-hour rule before buying non-essentials. Opt for second-hand or local products.',
+  };
+  return tips[cat] || null;
+}

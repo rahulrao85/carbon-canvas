@@ -2,7 +2,7 @@
   "source": {
     "storageSource": {
       "bucket": "run-sources-promptwars-mumbai-499305-asia-south1",
-      "object": "carbon-canvas-source-v6.tar.gz"
+      "object": "carbon-canvas-source-v7.tar.gz"
     }
   },
   "steps": [
