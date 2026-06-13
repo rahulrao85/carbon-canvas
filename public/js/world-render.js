@@ -8,6 +8,8 @@ if (typeof document !== 'undefined') {
   canvas = document.getElementById('garden-canvas');
   if (canvas) ctx = canvas.getContext('2d');
 }
+import { drawStreakRewards } from './streak-rewards.js';
+
 /** Determines carbon mood from kg CO₂. @param {number} kgCO2 */
 function getMood(kgCO2) {
   if (kgCO2 <= 10) return 'low';
@@ -162,52 +164,5 @@ export function renderGarden(kgCO2, streak = 0) {
   drawBirds(mood);
   drawTrash(mood);
   drawLightning(mood);
-  drawStreakRewards(mood, streak);
-}
-
-function drawStreakRewards(mood, streak) {
-  if (mood === 'high') return;
-  if (streak >= 7) {
-    drawButterflies(4);
-    drawSpecialFlowers();
-  } else if (streak >= 5) {
-    drawButterflies(2);
-  } else if (streak >= 3) {
-    drawButterflies(1);
-  }
-}
-
-function drawButterflies(count) {
-  const positions = [
-    { x: 100, y: 100 }, { x: 350, y: 80 },
-    { x: 600, y: 110 }, { x: 200, y: 130 },
-  ];
-  for (let i = 0; i < count && i < positions.length; i++) {
-    const p = positions[i];
-    ctx.fillStyle = '#e91e63';
-    ctx.beginPath();
-    ctx.ellipse(p.x - 6, p.y, 5, 3, -0.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(p.x + 6, p.y, 5, 3, 0.3, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function drawSpecialFlowers() {
-  const by = canvas.height * 0.72;
-  for (let i = 0; i < 5; i++) {
-    const x = 80 + i * (canvas.width / 5);
-    const y = by + Math.sin(i * 2) * 10;
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffd700';
-    ctx.fill();
-    ctx.strokeStyle = '#4caf50';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x, y + 5);
-    ctx.lineTo(x, y + 18);
-    ctx.stroke();
-  }
+  drawStreakRewards(ctx, canvas, mood, streak);
 }
