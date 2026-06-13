@@ -126,4 +126,42 @@ describe('Security — input sanitization', () => {
     expect(res.status).toBe(200);
     expect(res.body.label).toBe('Car');
   });
+
+  it('removes javascript protocol from input', async () => {
+    const res = await request(app)
+      .post('/api/carbon')
+      .send({ category: 'javascript:alert(1)', item: 'car', quantity: 1 });
+    expect(res.status).toBe(400);
+  });
+
+  it('removes vbscript protocol from input', async () => {
+    const res = await request(app)
+      .post('/api/carbon')
+      .send({ category: 'vbscript:msgbox(1)', item: 'car', quantity: 1 });
+    expect(res.status).toBe(400);
+  });
+
+  it('removes event handler attributes from input', async () => {
+    const res = await request(app)
+      .post('/api/carbon')
+      .send({ category: 'onerror=alert(1)', item: 'car', quantity: 1 });
+    expect(res.status).toBe(400);
+  });
+
+  it('strips HTML entities from input', async () => {
+    const res = await request(app)
+      .post('/api/carbon')
+      .send({ category: '&#60;script&#62;', item: 'car', quantity: 1 });
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('Security — CSP headers', () => {
+  it('does not allow unsafe-inline in style-src', async () => {
+    const res = await request(app).get('/');
+    const csp = res.headers['content-security-policy'];
+    expect(csp).toBeDefined();
+    expect(csp).not.toContain("'unsafe-inline'");
+    expect(csp).toMatch(/style-src\s+'self'/);
+  });
 });

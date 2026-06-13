@@ -1,3 +1,8 @@
+/**
+ * @module routes/challenges
+ * @fileoverview Weekly challenges endpoint. GET /api/challenges returns
+ * all challenges. POST /api/challenges/progress tracks user progress.
+ */
 import { Router } from 'express';
 
 const router = Router();

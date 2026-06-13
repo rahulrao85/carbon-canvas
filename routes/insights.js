@@ -1,3 +1,9 @@
+/**
+ * @module routes/insights
+ * @fileoverview AI-powered insight generation endpoint. POST /api/insights
+ * accepts an activities array and weeklyTotal, returns a short relatable
+ * comparison in Indian context.
+ */
 import { Router } from 'express';
 import { generateInsight } from '../services/ai.js';
 

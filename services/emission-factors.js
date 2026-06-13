@@ -1,3 +1,8 @@
+/**
+ * @module services/emission-factors
+ * @fileoverview Carbon emission factors for all tracked activities.
+ */
+
 const factors = {
   transport: {
     car: { kgPerUnit: 0.12, unit: 'km', label: 'Car' },
@@ -33,6 +38,13 @@ const factors = {
   },
 };
 
+/**
+ * Calculates CO2 emissions for a given activity.
+ * @param {string} category - Activity category (transport, food, energy, shopping).
+ * @param {string} item - Specific item ID within the category.
+ * @param {number} quantity - Number of units.
+ * @returns {Object|null} { kgCO2, label, unit, quantity } or null if invalid.
+ */
 export function getEmission(category, item, quantity) {
   const cat = factors[category];
   if (!cat) return null;
@@ -46,10 +58,19 @@ export function getEmission(category, item, quantity) {
   };
 }
 
+/**
+ * Returns all available category names.
+ * @returns {string[]} Array of category keys (transport, food, energy, shopping).
+ */
 export function getCategories() {
   return Object.keys(factors);
 }
 
+/**
+ * Returns items for a given category.
+ * @param {string} category - The category to look up.
+ * @returns {Array} Array of { id, label, unit } objects. Empty if category not found.
+ */
 export function getItems(category) {
   const cat = factors[category];
   if (!cat) return [];

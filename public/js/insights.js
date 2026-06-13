@@ -1,3 +1,9 @@
+/**
+ * @module insights
+ * @fileoverview Handles AI-powered insight display. Fetches from /api/insights
+ * and falls back to hardcoded equivalences on failure.
+ */
+
 const insightContent = document.getElementById('insight-content');
 
 function setInsightText(text) {
@@ -15,6 +21,12 @@ function setInsightPlaceholder(text) {
   insightContent.appendChild(p);
 }
 
+/**
+ * Fetches an AI insight for the given activity and weekly total.
+ * Falls back to hardcoded text on network or server error.
+ * @param {Object} activity - The most recently logged activity.
+ * @param {number} weeklyTotal - Total CO2 for the current week in kg.
+ */
 export async function fetchInsight(activity, weeklyTotal) {
   setInsightPlaceholder('Generating insight...');
 
@@ -40,6 +52,11 @@ export async function fetchInsight(activity, weeklyTotal) {
   }
 }
 
+/**
+ * Generates a hardcoded equivalence based on CO2 amount.
+ * @param {number} kgCO2 - CO2 in kg.
+ * @returns {string} Human-readable comparison string.
+ */
 function getFallbackInsight(kgCO2) {
   if (kgCO2 >= 100) return `That's equivalent to driving a car for ${Math.round(kgCO2 / 0.12)} km.`;
   if (kgCO2 >= 10) return `That's like running your AC for ${Math.round(kgCO2 / 0.5)} hours straight.`;

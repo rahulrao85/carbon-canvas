@@ -1,12 +1,15 @@
+/**
+ * @module world-render
+ * @fileoverview Canvas garden that visualises carbon levels visually.
+ * Low → sunny/green, Medium → overcast, High → grey/trash/lightning.
+ */
 const canvas = document.getElementById('garden-canvas');
 const ctx = canvas.getContext('2d');
-
 function getMood(kgCO2) {
   if (kgCO2 <= 10) return 'low';
   if (kgCO2 <= 30) return 'medium';
   return 'high';
 }
-
 function drawSky(mood) {
   const gradients = {
     low: ['#4fc3f7', '#b3e5fc'],
@@ -20,7 +23,6 @@ function drawSky(mood) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-
 function drawSun(mood) {
   if (mood !== 'low') return;
   const x = canvas.width - 80;
@@ -36,7 +38,6 @@ function drawSun(mood) {
   ctx.lineWidth = 4;
   ctx.stroke();
 }
-
 function drawClouds(mood) {
   const configs = {
     low: [
@@ -54,7 +55,6 @@ function drawClouds(mood) {
       { x: 600, y: 60, size: 40, color: '#546e7a' },
     ],
   };
-
   (configs[mood] || []).forEach((c) => {
     ctx.beginPath();
     ctx.ellipse(c.x, c.y, c.size, c.size * 0.6, 0, 0, Math.PI * 2);
@@ -68,7 +68,6 @@ function drawClouds(mood) {
     ctx.fill();
   });
 }
-
 function drawGround(mood) {
   const groundY = canvas.height * 0.7;
   const colors = {
@@ -83,7 +82,6 @@ function drawGround(mood) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
 }
-
 function drawTree(x, y, mood) {
   const trunkColor = mood === 'high' ? '#5d4037' : '#6d4c41';
   const leafColors = {
@@ -91,10 +89,8 @@ function drawTree(x, y, mood) {
     medium: ['#8bc34a', '#9ccc65'],
     high: ['#795548', '#8d6e63'],
   };
-
   ctx.fillStyle = trunkColor;
   ctx.fillRect(x - 5, y, 10, 50);
-
   const leaves = leafColors[mood] || leafColors.low;
   for (let i = 0; i < leaves.length; i++) {
     ctx.beginPath();
@@ -103,7 +99,6 @@ function drawTree(x, y, mood) {
     ctx.fill();
   }
 }
-
 function drawFlowers(mood) {
   if (mood === 'high') return;
   const count = mood === 'low' ? 12 : 5;
@@ -123,7 +118,6 @@ function drawFlowers(mood) {
     ctx.stroke();
   }
 }
-
 function drawBirds(mood) {
   if (mood !== 'low') return;
   const positions = [
@@ -140,7 +134,6 @@ function drawBirds(mood) {
     ctx.stroke();
   });
 }
-
 function drawTrash(mood) {
   if (mood !== 'high') return;
   const items = [
@@ -155,7 +148,6 @@ function drawTrash(mood) {
     ctx.fillRect(item.x + 1, item.y - 2, 10, 4);
   });
 }
-
 function drawLightning(mood) {
   if (mood !== 'high') return;
   const bolts = [
@@ -172,32 +164,36 @@ function drawLightning(mood) {
     ctx.stroke();
   });
 }
-
+/**
+ * Renders the full garden scene based on carbon level.
+ * Redraws sky, sun, clouds, ground, and mood elements.
+ * @param {number} kgCO2 - Current total CO2 in kg.
+ */
 export function renderGarden(kgCO2) {
   const mood = getMood(kgCO2);
-  canvas.width = canvas.clientWidth * 2;
-  canvas.height = canvas.clientHeight * 2;
+  const cw = canvas.clientWidth || canvas.width;
+  const ch = canvas.clientHeight || canvas.height;
+  canvas.width = cw * 2;
+  canvas.height = ch * 2;
   ctx.scale(2, 2);
-  const w = canvas.width / 2;
-  const h = canvas.height / 2;
-
   drawSky(mood);
   drawSun(mood);
   drawClouds(mood);
   drawGround(mood);
-
   const treeCounts = { low: 3, medium: 1, high: 0 };
   const treeCount = treeCounts[mood];
   for (let i = 0; i < treeCount; i++) {
-    drawTree(140 + i * 200, h * 0.65 - 20, mood);
+    drawTree(140 + i * 200, canvas.height * 0.325 - 20, mood);
   }
-
   drawFlowers(mood);
   drawBirds(mood);
   drawTrash(mood);
   drawLightning(mood);
 }
-
+/**
+ * Returns the carbon level: 'low', 'medium', or 'high'.
+ * @param {number} kgCO2 - Current total CO2 in kg.
+ */
 export function getCarbonLevel(kgCO2) {
   return getMood(kgCO2);
 }

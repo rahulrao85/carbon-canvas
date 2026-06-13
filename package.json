@@ -9,6 +9,7 @@
     "dev": "node --watch server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --no-cache"
   },
+  "author": "Rahul Rao",
   "keywords": ["carbon-footprint", "awareness", "climate", "sustainability", "ai", "promptwars"],
   "license": "MIT",
   "dependencies": {

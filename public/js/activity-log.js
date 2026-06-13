@@ -1,3 +1,9 @@
+/**
+ * @module activity-log
+ * @fileoverview Manages the activity logging form. Populates category/item
+ * dropdowns, handles form submission, and triggers the onActivityLogged callback.
+ */
+
 const CATEGORY_ITEMS = {
   transport: [
     { id: 'car', label: 'Car', unit: 'km' },
@@ -35,6 +41,12 @@ const CATEGORY_ITEMS = {
 
 let onActivityLogged = null;
 
+/**
+ * Initialises the activity log form.
+ * Populates the category dropdown, entity dropdown on change,
+ * and handles form submission via POST /api/carbon.
+ * @param {Function} callback - Called with the logged activity after success.
+ */
 export function initActivityLog(callback) {
   onActivityLogged = callback;
 

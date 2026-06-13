@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Carbon Canvas — Understand, track, and reduce your carbon footprint through a living visual world and personalized AI insights.">
   <title>Carbon Canvas</title>
+  <link rel="dns-prefetch" href="https://openrouter.ai">
   <link rel="preconnect" href="https://openrouter.ai">
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/layout.css">
@@ -17,10 +18,11 @@
   <header class="header">
     <div class="header-inner">
       <h1 class="logo">Carbon Canvas</h1>
-      <nav aria-label="Main navigation">
-        <button class="tab active" data-tab="log" aria-current="page">Log Activity</button>
-        <button class="tab" data-tab="dashboard">Dashboard</button>
-        <button class="tab" data-tab="challenges">Challenges</button>
+      <nav aria-label="Main navigation" role="tablist">
+        <button class="tab active" data-tab="log" role="tab" aria-selected="true" aria-controls="log">Log Activity</button>
+        <button class="tab" data-tab="dashboard" role="tab" aria-selected="false" aria-controls="dashboard">Dashboard</button>
+        <button class="tab" data-tab="challenges" role="tab" aria-selected="false" aria-controls="challenges">Challenges</button>
+        <button class="tab" data-tab="routes" role="tab" aria-selected="false" aria-controls="routes">Route Compare</button>
       </nav>
       <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
     </div>
@@ -28,10 +30,13 @@
 
   <main id="main-content">
     <section id="world-section" aria-label="Your carbon garden">
-      <canvas id="garden-canvas" width="800" height="400" role="img" aria-label="A living garden that reflects your carbon footprint"></canvas>
+      <canvas id="garden-canvas" width="800" height="400" role="img" aria-label="A living garden that reflects your carbon footprint">
+        Your carbon garden: a visual scene showing trees, flowers, and sky that changes based on your daily carbon footprint. Low carbon shows a green, thriving garden. High carbon shows gray skies and bare ground.
+      </canvas>
+      <div id="scene-desc" class="scene-description">The garden scene changes based on your carbon level: low shows a bright sunny garden with flowers, trees, and birds. Medium shows overcast weather with fewer plants. High shows a grey landscape with trash and lightning.</div>
     </section>
 
-    <section id="log" class="tab-content active" aria-label="Log an activity">
+    <section id="log" class="tab-content active" role="tabpanel" aria-label="Log an activity">
       <div class="card">
         <h2>Log an Activity</h2>
         <form id="activity-form" novalidate>
@@ -61,7 +66,7 @@
       </div>
     </section>
 
-    <section id="dashboard" class="tab-content" aria-label="Dashboard">
+    <section id="dashboard" class="tab-content" role="tabpanel" aria-label="Dashboard">
       <div class="dashboard-grid">
         <div class="card">
           <h2>Today's Footprint</h2>
@@ -86,7 +91,7 @@
       </div>
     </section>
 
-    <section id="challenges" class="tab-content" aria-label="Challenges">
+    <section id="challenges" class="tab-content" role="tabpanel" aria-label="Challenges">
       <div class="card">
         <h2>Weekly Challenges</h2>
         <div id="challenges-list" role="list">
@@ -95,7 +100,28 @@
       </div>
     </section>
 
-    <section id="insights" class="tab-content" aria-label="AI Insights" aria-live="polite">
+    <section id="routes" class="tab-content" role="tabpanel" aria-label="Route carbon comparison">
+      <div class="card">
+        <h2>Route Carbon Compare</h2>
+        <p class="stat-insight route-footnote">Compare carbon emissions across transport modes for any trip.</p>
+        <div class="form-group">
+          <label for="route-from">From</label>
+          <input type="text" id="route-from" placeholder="e.g. Delhi" aria-label="Origin">
+        </div>
+        <div class="form-group">
+          <label for="route-to">To</label>
+          <input type="text" id="route-to" placeholder="e.g. Mumbai" aria-label="Destination">
+        </div>
+        <div class="form-group">
+          <label for="route-distance">Distance (km)</label>
+          <input type="number" id="route-distance" min="0.1" step="0.1" placeholder="e.g. 250" aria-required="true">
+        </div>
+        <button id="route-calculate" class="btn-primary">Compare Modes</button>
+        <div id="route-results" class="route-results"></div>
+      </div>
+    </section>
+
+    <section id="insights" class="tab-content" role="tabpanel" aria-label="AI Insights" aria-live="polite">
       <div class="card insight-card">
         <div id="insight-content" class="insight-content">
           <p class="insight-placeholder">Log an activity to receive a personalized AI insight about your carbon footprint.</p>
@@ -108,10 +134,6 @@
     <p>Carbon Canvas — Built for PromptWars Virtual Challenge 3</p>
   </footer>
 
-  <script src="/js/storage.js"></script>
-  <script src="/js/activity-log.js"></script>
-  <script src="/js/world-render.js"></script>
-  <script src="/js/insights.js"></script>
-  <script src="/js/app.js"></script>
+  <script type="module" src="/js/app.js"></script>
 </body>
 </html>

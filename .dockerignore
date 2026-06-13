@@ -1,4 +1,9 @@
 node_modules
-.git
 .env
+.git
 *.test.js
+jest.config.mjs
+.eslintrc.json
+.prettierrc
+README.md
+cloudbuild.yaml

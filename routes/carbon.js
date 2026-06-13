@@ -1,3 +1,9 @@
+/**
+ * @module routes/carbon
+ * @fileoverview Carbon calculation endpoints. POST /api/carbon calculates
+ * CO₂ emissions for a given activity. GET /api/carbon/categories and
+ * /api/carbon/items/:category return available options.
+ */
 import { Router } from 'express';
 import { getEmission, getItems } from '../services/emission-factors.js';
 
