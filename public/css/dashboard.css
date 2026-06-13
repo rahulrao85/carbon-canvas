@@ -1,0 +1,126 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.stat-insight {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.insight-card {
+  border-left: 4px solid var(--color-primary);
+}
+
+.insight-content {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  min-height: 60px;
+}
+
+.insight-placeholder {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.insight-content p:not(.insight-placeholder) {
+  color: var(--color-text);
+}
+
+.challenge-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.challenge-item:last-child {
+  border-bottom: none;
+}
+
+.challenge-icon {
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  border-radius: 10px;
+}
+
+.challenge-info {
+  flex: 1;
+}
+
+.challenge-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.challenge-desc {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.challenge-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
+
+.challenge-status.completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+[data-theme="dark"] .challenge-status.completed {
+  background: #1a3a1a;
+  color: #8bc88b;
+}
+
+.activity-timeline {
+  margin-top: 16px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.85rem;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-co2 {
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.activity-time {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

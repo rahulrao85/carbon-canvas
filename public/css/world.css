@@ -1,0 +1,60 @@
+#world-section {
+  margin-bottom: 20px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  background: #87ceeb;
+  aspect-ratio: 2 / 1;
+  max-height: 400px;
+}
+
+#garden-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+}
+
+[data-theme="dark"] #world-section {
+  border-color: var(--color-border);
+}
+
+/* World mood indicator */
+.world-mood {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background var(--transition), color var(--transition);
+}
+
+.world-mood.low {
+  background: #d4edda;
+  color: #155724;
+}
+
+.world-mood.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.world-mood.high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+[data-theme="dark"] .world-mood.low {
+  background: #1a3a1a;
+  color: #8bc88b;
+}
+
+[data-theme="dark"] .world-mood.medium {
+  background: #3a3a1a;
+  color: #d4c84a;
+}
+
+[data-theme="dark"] .world-mood.high {
+  background: #3a1a1a;
+  color: #e88a8a;
+}
