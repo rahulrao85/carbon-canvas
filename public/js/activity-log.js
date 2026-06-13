@@ -56,6 +56,7 @@ export function initActivityLog(callback) {
   const form = document.getElementById('activity-form');
   const errorEl = document.getElementById('form-error');
 
+  /** Resets the item dropdown to its default prompt. @param {string} defaultText */
   function resetItems(defaultText) {
     itemSelect.textContent = '';
     const opt = document.createElement('option');
@@ -131,7 +132,7 @@ export function initActivityLog(callback) {
       resetItems('Select activity');
       itemSelect.disabled = true;
       catSelect.focus();
-    } catch (err) {
+    } catch (_err) {
       errorEl.textContent = 'Network error. Please try again.';
     }
   });

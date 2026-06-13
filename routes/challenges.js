@@ -16,14 +16,19 @@ const challenges = [
   { id: 6, title: 'Low-Energy Evening', description: 'Keep lights & fans off for 2 hours before bed', targetDays: 3, icon: '🕯️' },
 ];
 
+/** Returns all available challenges. */
 router.get('/', (_req, res) => {
   res.json({ challenges });
 });
 
+/**
+ * Updates and evaluates progress on a challenge.
+ * @param {Object} req.body - { challengeId, progress }
+ */
 router.post('/progress', (req, res) => {
   const { challengeId, progress } = req.body;
 
-  if (!challengeId || progress == null) {
+  if (!challengeId || progress === null || progress === undefined) {
     return res.status(400).json({ error: 'Missing required fields: challengeId, progress' });
   }
 

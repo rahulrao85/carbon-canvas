@@ -4,11 +4,11 @@
 
 A carbon footprint **awareness** platform — not just another tracking dashboard. Log your daily activities and watch a living garden world reflect your carbon choices in real time. AI-powered insights turn abstract numbers into emotional, relatable comparisons that actually change behavior.
 
-## The Problem
+## 🎯 Problem Statement
 
 Most carbon footprint tools show you numbers: kg CO₂, pie charts, bar graphs. The problem? **Data without context doesn't change behavior.** The average Indian urban resident has no idea what "1.5 tons of CO₂ per year" actually means.
 
-## Our Solution
+## ✨ Our Solution (What Makes Carbon Canvas Different)
 
 Carbon Canvas makes carbon *feel* personal through two mechanisms:
 
@@ -65,6 +65,33 @@ carbon-canvas/
 ├── server.js         # Express entry point
 └── server.test.js    # 45 tests
 ```
+
+## 🤖 AI Architecture
+
+Carbon Canvas uses a **2-layer AI fallback chain** for maximum reliability:
+
+| Priority | Provider | Model | Purpose |
+| :--- | :--- | :--- | :--- |
+| 🥇 Primary | **OpenRouter** | `meta-llama/llama-3.1-8b-instruct` | Generates emotional comparisons in the Indian context. |
+| 🥈 Fallback | **Static Engine** | Built-in matching array | Instantly resolves comparisons based on emission thresholds if network fails. |
+
+## 🔌 API Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/carbon/categories` | Returns list of categories (transport, food, etc.). |
+| `GET` | `/api/carbon/items/:category` | Returns specific items and units for a category. |
+| `POST` | `/api/carbon` | Calculates carbon footprint based on item and quantity. |
+| `POST` | `/api/insights` | Passes weekly footprint to generate custom AI comparison. |
+| `GET` | `/api/challenges` | Returns the list of active carbon challenges. |
+| `POST` | `/api/challenges/progress` | Updates and verifies progress on weekly challenges. |
+
+## ♿ Accessibility (WCAG 2.1 AA Compliance)
+
+- **Semantic HTML5:** Built using semantic elements (`<header>`, `<main>`, `<section>`).
+- **ARIA Tabbing:** Implemented WAI-ARIA tab controls (`role="tablist"`, `role="tab"`, `aria-selected`, `role="tabpanel"`).
+- **Canvas Alternates:** Provided screen-reader description fallback inside the `<canvas>` tag.
+- **Focus visible:** Clear visual outline on keyboard focus.
 
 ## Scoring Philosophy
 

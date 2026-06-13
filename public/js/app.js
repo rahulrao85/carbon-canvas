@@ -6,7 +6,7 @@
  */
 import { addActivity, getActivities, getTodayActivities, getWeekActivities, getTotalCO2, getTopSource, getStreak, getTheme, setTheme } from './storage.js';
 import { initActivityLog } from './activity-log.js';
-import { renderGarden, getCarbonLevel } from './world-render.js';
+import { renderGarden } from './world-render.js';
 import { fetchInsight } from './insights.js';
 import { initRouteCalculator } from './route-calc.js';
 

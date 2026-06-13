@@ -9,6 +9,10 @@ import { generateInsight } from '../services/ai.js';
 
 const router = Router();
 
+/**
+ * Generates an AI insight for the latest activity.
+ * @param {Object} req.body - { activities, weeklyTotal }
+ */
 router.post('/', async (req, res) => {
   const { activities, weeklyTotal } = req.body;
 
@@ -16,7 +20,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Activities array is required and must not be empty' });
   }
 
-  if (weeklyTotal == null || typeof weeklyTotal !== 'number') {
+  if (weeklyTotal === null || weeklyTotal === undefined || typeof weeklyTotal !== 'number') {
     return res.status(400).json({ error: 'Weekly total must be a number' });
   }
 

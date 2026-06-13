@@ -4,8 +4,12 @@
  * and falls back to hardcoded equivalences on failure.
  */
 
-const insightContent = document.getElementById('insight-content');
+let insightContent;
+if (typeof document !== 'undefined') {
+  insightContent = document.getElementById('insight-content');
+}
 
+/** Sets the insight container to show a result. @param {string} text */
 function setInsightText(text) {
   insightContent.textContent = '';
   const p = document.createElement('p');
@@ -13,6 +17,7 @@ function setInsightText(text) {
   insightContent.appendChild(p);
 }
 
+/** Sets the insight container to show a placeholder. @param {string} text */
 function setInsightPlaceholder(text) {
   insightContent.textContent = '';
   const p = document.createElement('p');

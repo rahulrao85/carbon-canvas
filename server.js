@@ -21,8 +21,8 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"],
-      imgSrc: ["'self'", "data:"],
-      connectSrc: ["'self'", "https://openrouter.ai"],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'", 'https://openrouter.ai'],
       fontSrc: ["'self'"],
     },
   },
@@ -38,9 +38,9 @@ app.use(rateLimit({
 app.use(express.json({ limit: PAYLOAD_LIMIT }));
 
 /**
- * Recursively sanitize an object by stripping HTML tags and JavaScript protocols.
+ * Recursively sanitize an object by stripping HTML tags.
  * Prevents XSS injection in request body fields.
- * @param {*} obj - The value to sanitize (string, object, or other).
+ * @param {*} obj - The value to sanitize.
  * @returns {*} The sanitized value.
  */
 function sanitize(obj) {
