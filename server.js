@@ -87,7 +87,7 @@ app.use((_req, res) => {
 });
 
 app.use((err, _req, res, _next) => {
-  console.error('Unhandled error:', err.message);
+  if (process.env.NODE_ENV !== 'test') console.error('Unhandled error:', err.message);
   const status = err.status || err.statusCode || 500;
   res.status(status).json({ error: err.message || 'Internal server error' });
 });

@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --no-cache"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --no-cache",
+    "lint": "eslint ."
   },
   "author": "Rahul Rao",
   "keywords": ["carbon-footprint", "awareness", "climate", "sustainability", "ai", "promptwars"],

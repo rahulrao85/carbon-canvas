@@ -46,39 +46,35 @@ export function initRouteCalculator() {
       .sort((a, b) => a.kgCO2 - b.kgCO2);
 
     const lowest = entries[0];
-    const html = `
-      <h3 class="route-heading">${escapeHtml(fromText)} → ${escapeHtml(toText)} (${dist} km)</h3>
-      <table class="route-table" role="table" aria-label="Carbon comparison by transport mode">
-        <thead>
-          <tr>
-            <th scope="col">Mode</th>
-            <th scope="col">kg CO₂</th>
-            <th scope="col">vs Best</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${entries.map((e) => {
-            const isBest = e.id === lowest.id;
-            let vs;
-            if (isBest) {
-              vs = '✅ Best';
-            } else if (lowest.kgCO2 === 0) {
-              vs = `+${Math.round(e.kgCO2)} kg`;
-            } else {
-              vs = `+${Math.round((e.kgCO2 / lowest.kgCO2 - 1) * 100)}%`;
-            }
-            return `
-              <tr class="${isBest ? 'route-best' : ''}">
-                <td>${e.label}</td>
-                <td><strong>${e.kgCO2}</strong></td>
-                <td>${vs}</td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
-      <p class="route-footnote">${lowest.label} is the lowest-carbon option for this trip.</p>
-    `;
+    const html = `<h3 class="route-heading">${escapeHtml(fromText)} → ${escapeHtml(toText)} (${dist} km)</h3>
+<table class="route-table" role="table" aria-label="Carbon comparison by transport mode">
+<thead>
+<tr>
+<th scope="col">Mode</th>
+<th scope="col">kg CO₂</th>
+<th scope="col">vs Best</th>
+</tr>
+</thead>
+<tbody>
+${entries.map((e) => {
+  const isBest = e.id === lowest.id;
+  let vs;
+  if (isBest) {
+    vs = '✅ Best';
+  } else if (lowest.kgCO2 === 0) {
+    vs = `+${Math.round(e.kgCO2)} kg`;
+  } else {
+    vs = `+${Math.round((e.kgCO2 / lowest.kgCO2 - 1) * 100)}%`;
+  }
+  return `<tr class="${isBest ? 'route-best' : ''}">
+<td>${e.label}</td>
+<td><strong>${e.kgCO2}</strong></td>
+<td>${vs}</td>
+</tr>`;
+}).join('')}
+</tbody>
+</table>
+<p class="route-footnote">${lowest.label} is the lowest-carbon option for this trip.</p>`;
     results.innerHTML = html;
   });
 }

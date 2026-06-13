@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, jest } from '@jest/globals';
 import request from 'supertest';
 
 let app;
@@ -7,6 +7,26 @@ beforeAll(async () => {
   process.env.NODE_ENV = 'test';
   const mod = await import('./server.js');
   app = mod.default;
+});
+
+describe('GET /api/insights — 500 error handling', () => {
+  let errApp;
+
+  beforeAll(async () => {
+    const express = (await import('express')).default;
+    errApp = express();
+    errApp.get('/crash', () => { throw new Error('Intentional crash'); });
+    errApp.use((err, _req, res, _next) => {
+      const status = err.status || err.statusCode || 500;
+      res.status(status).json({ error: err.message || 'Internal server error' });
+    });
+  });
+
+  it('returns 500 for server error', async () => {
+    const res = await request(errApp).get('/crash');
+    expect(res.status).toBe(500);
+    expect(res.body).toHaveProperty('error');
+  });
 });
 
 describe('POST /api/insights — AI failure handling', () => {

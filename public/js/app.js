@@ -162,6 +162,23 @@ function escapeHTML(str) {
 }
 
 /**
+ * Seeds demo data for quick testing.
+ */
+function initDemoSeed() {
+  document.getElementById('btn-demo').addEventListener('click', () => {
+    const demos = [
+      { label: 'Car (Petrol)', quantity: 10, unit: 'km', kgCO2: 1.2, category: 'transport', date: new Date().toISOString() },
+      { label: 'Bus', quantity: 5, unit: 'km', kgCO2: 0.15, category: 'transport', date: new Date().toISOString() },
+      { label: 'Rice Bowl', quantity: 1, unit: 'meal', kgCO2: 0.8, category: 'food', date: new Date().toISOString() },
+    ];
+    demos.forEach(addActivity);
+    updateWorld();
+    updateDashboard();
+    updateInsights(demos[demos.length - 1]);
+  });
+}
+
+/**
  * Initialises all application components on DOMContentLoaded.
  */
 function init() {
@@ -170,6 +187,7 @@ function init() {
   initActivityLog(onActivityLogged);
   initRouteCalculator();
   initChallenges();
+  initDemoSeed();
   updateWorld();
   updateDashboard();
 }
