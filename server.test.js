@@ -6,62 +6,43 @@ beforeAll(async () => {
   const mod = await import('./server.js');
   app = mod.default;
 });
-describe('GET /', () => {
-  it('serves index.html', async () => {
-    const res = await request(app).get('/');
+describe('GET / and basic server capabilities', () => {
+  it('serves index.html with compression, security, and rate limit headers', async () => {
+    const res = await request(app).get('/').set('Accept-Encoding', 'gzip');
     expect(res.status).toBe(200);
     expect(res.headers['content-type']).toMatch(/html/);
-  });
-});
-describe('Security headers', () => {
-  it('sets helmet security headers', async () => {
-    const res = await request(app).get('/');
     expect(res.headers['x-content-type-options']).toBe('nosniff');
     expect(res.headers['x-frame-options']).toBe('SAMEORIGIN');
     expect(res.headers['x-xss-protection']).toBe('0');
-  });
-});
-describe('Rate limiting', () => {
-  it('sets rate limit headers', async () => {
-    const res = await request(app).get('/');
     expect(res.headers['ratelimit-limit']).toBeDefined();
     expect(res.headers['ratelimit-remaining']).toBeDefined();
   });
 });
 describe('POST /api/carbon', () => {
-  it('calculates carbon for valid transport input', async () => {
-    const res = await request(app)
+  it('calculates carbon for valid inputs', async () => {
+    const res1 = await request(app)
       .post('/api/carbon')
       .send({ category: 'transport', item: 'car', quantity: 10 });
-    expect(res.status).toBe(200);
-    expect(res.body.kgCO2).toBe(1.2);
-    expect(res.body).toHaveProperty('label', 'Car');
-  });
-  it('calculates carbon for food input', async () => {
-    const res = await request(app)
+    expect(res1.status).toBe(200);
+    expect(res1.body.kgCO2).toBe(1.2);
+    expect(res1.body.label).toBe('Car');
+
+    const res2 = await request(app)
       .post('/api/carbon')
       .send({ category: 'food', item: 'chicken_meal', quantity: 2 });
-    expect(res.status).toBe(200);
-    expect(res.body.kgCO2).toBe(3.0);
+    expect(res2.status).toBe(200);
+    expect(res2.body.kgCO2).toBe(3.0);
   });
-  it('returns 400 for missing fields', async () => {
-    const res = await request(app).post('/api/carbon').send({ category: 'transport' });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error');
-  });
-  it('returns 400 for invalid category', async () => {
-    const res = await request(app)
-      .post('/api/carbon')
-      .send({ category: 'invalid', item: 'car', quantity: 1 });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error');
-  });
-  it('returns 400 for negative quantity', async () => {
-    const res = await request(app)
-      .post('/api/carbon')
-      .send({ category: 'transport', item: 'car', quantity: -5 });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error');
+  it('returns 400 for invalid carbon requests', async () => {
+    for (const payload of [
+      { category: 'transport' },
+      { category: 'invalid', item: 'car', quantity: 1 },
+      { category: 'transport', item: 'car', quantity: -5 }
+    ]) {
+      const res = await request(app).post('/api/carbon').send(payload);
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty('error');
+    }
   });
 });
 describe('GET /api/carbon', () => {
@@ -126,31 +107,20 @@ describe('GET /api/challenges', () => {
   });
 });
 describe('POST /api/challenges/progress', () => {
-  it('returns completed when progress meets target', async () => {
-    const res = await request(app)
-      .post('/api/challenges/progress')
-      .send({ challengeId: 1, progress: 5 });
-    expect(res.status).toBe(200);
-    expect(res.body.completed).toBe(true);
-  });
-  it('returns not completed when progress is below target', async () => {
-    const res = await request(app)
-      .post('/api/challenges/progress')
-      .send({ challengeId: 1, progress: 1 });
-    expect(res.status).toBe(200);
-    expect(res.body.completed).toBe(false);
-  });
-  it('returns 400 for missing fields', async () => {
-    const res = await request(app)
-      .post('/api/challenges/progress')
-      .send({});
-    expect(res.status).toBe(400);
-  });
-  it('returns 404 for unknown challenge', async () => {
-    const res = await request(app)
-      .post('/api/challenges/progress')
-      .send({ challengeId: 999, progress: 1 });
-    expect(res.status).toBe(404);
+  it('handles progress validation and completion correctly', async () => {
+    const res1 = await request(app).post('/api/challenges/progress').send({ challengeId: 1, progress: 5 });
+    expect(res1.status).toBe(200);
+    expect(res1.body.completed).toBe(true);
+
+    const res2 = await request(app).post('/api/challenges/progress').send({ challengeId: 1, progress: 1 });
+    expect(res2.status).toBe(200);
+    expect(res2.body.completed).toBe(false);
+
+    const res3 = await request(app).post('/api/challenges/progress').send({});
+    expect(res3.status).toBe(400);
+
+    const res4 = await request(app).post('/api/challenges/progress').send({ challengeId: 999, progress: 1 });
+    expect(res4.status).toBe(404);
   });
 });
 describe('404 handler', () => {
@@ -158,12 +128,6 @@ describe('404 handler', () => {
     const res = await request(app).get('/api/unknown');
     expect(res.status).toBe(404);
     expect(res.body).toHaveProperty('error');
-  });
-});
-describe('Compression', () => {
-  it('supports gzip compression', async () => {
-    const res = await request(app).get('/').set('Accept-Encoding', 'gzip');
-    expect(res.status).toBe(200);
   });
 });
 describe('Request body limits', () => {
@@ -176,18 +140,14 @@ describe('Request body limits', () => {
   });
 });
 describe('Static file serving', () => {
-  it('serves CSS files', async () => {
-    const res = await request(app).get('/css/tokens.css');
-    expect(res.status).toBe(200);
-    expect(res.headers['content-type']).toMatch(/css/);
-  });
-  it('serves JS files', async () => {
-    const res = await request(app).get('/js/app.js');
-    expect(res.status).toBe(200);
-  });
-  it('sets immutable cache headers on static assets', async () => {
-    const res = await request(app).get('/css/tokens.css');
-    expect(res.headers['cache-control']).toMatch(/max-age/);
+  it('serves CSS/JS files with immutable cache headers', async () => {
+    const cssRes = await request(app).get('/css/tokens.css');
+    expect(cssRes.status).toBe(200);
+    expect(cssRes.headers['content-type']).toMatch(/css/);
+    expect(cssRes.headers['cache-control']).toMatch(/max-age/);
+
+    const jsRes = await request(app).get('/js/app.js');
+    expect(jsRes.status).toBe(200);
   });
 });
 describe('Method validation', () => {
